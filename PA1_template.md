@@ -1,13 +1,9 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
-```{r}
+
+```r
 ## Function definition part
 func_totalstepseachday <- function(par_activity){
         totalstepseachday <- with(par_activity, 
@@ -56,20 +52,27 @@ func_avgstepsperintervaldf <- function(par_activity){
 ## Execution part
 library(ggplot2)
 activity <- read.csv("activity.csv")
-
-
 ```
 
 
 ## What is mean total number of steps taken per day?
-```{r}
+
+```r
 func_totalstepseachday(activity)
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+
+```
+## [1] "The mean total number of steps take per day is : 9354.23"
+## [1] "The median total number of steps take per day is : 10395"
 ```
 
 
 ## What is the average daily activity pattern?
 
-```{r}
+
+```r
 intervallabelpos <- paste0("0", seq(from = 0,to = 23, by = 2), "00")
 intervallabelpos <- substring(intervallabelpos, 
                               first = nchar(intervallabelpos) - 3)
@@ -89,26 +92,39 @@ h2 <- ggplot(df_avgstepsperinterval, aes(x = interval, y = avgsteps, group = 1))
         theme(plot.title = element_text(size = 20))  
 
 h2
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+
+```r
 maxindex <- row.names(df_avgstepsperinterval[which.max(df_avgstepsperinterval$avgsteps),])
 
 print(paste0("The interval containing the maximum number of steps is : ", 
              maxindex))
+```
 
+```
+## [1] "The interval containing the maximum number of steps is : 835"
 ```
 
 
 
 ## Imputing missing values
-```{r}
+
+```r
 nasum <- sum(is.na(activity$steps))
 print(paste0("The total number of missing values in the dataset is : ", 
              nasum))
 ```
 
+```
+## [1] "The total number of missing values in the dataset is : 2304"
+```
+
 **It is considered to use average steps of each interval across all days to replace NA :**
 
-```{r}
+
+```r
 activitytofillNA <- activity
 naindex <- which(is.na(activitytofillNA$steps))
 
@@ -124,7 +140,13 @@ for(i in 1:length(intervalindex)){
 activitytofillNA$steps[naindex] <- replacenanumeric
 
 func_totalstepseachday(activitytofillNA)
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
+
+```
+## [1] "The mean total number of steps take per day is : 10766.2"
+## [1] "The median total number of steps take per day is : 10766.2"
 ```
 
 
@@ -135,13 +157,11 @@ func_totalstepseachday(activitytofillNA)
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
-```{r,echo=FALSE,results="hide"}
-#This part is not directly related to this project, so I let it hide. Because my OS version is not English #version, I have to set here deliberately to let the following code to run correctly.
-Sys.setlocale("LC_TIME","C")
-```
 
 
-```{r}
+
+
+```r
 df_activityaddweekdayfactor <- data.frame(activitytofillNA, 
                                        weekdayfactor = character(nrow(activitytofillNA)),
                                        stringsAsFactors = FALSE)
@@ -188,7 +208,7 @@ h3 <- ggplot(df_avgstepsperintervalconnected, aes(x = interval, y = avgsteps, gr
         theme(plot.title = element_text(size = 20))  
 
 h3
-
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
 
